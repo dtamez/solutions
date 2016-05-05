@@ -15,11 +15,26 @@ from __future__ import absolute_import
 
 import argparse
 
+UP, RIGHT, LEFT, DOWN, UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, DOWN_RIGHT = range(8)
+ROWS = {n: l for n, l in zip(range(8), list('abcdefgh'))}
 
-letters = list('abcdefgh')
-nums = list(range(1, 9))
-cols = [['{}{}'.format(l, n) for n in nums] for l in letters]
-rows = [['{}{}'.format(l, n) for l in letters] for n in nums]
+
+class NoMoveError(Exception):
+    pass
+
+
+def make_move(row, col, direction):
+    if direction == UP:
+        return move_up(row,  col)
+    else:
+        pass
+
+
+def move_up(row, col):
+    if row == 7:
+        raise NoMoveError()
+    else:
+        return row + 1, col
 
 
 def get_available_moves(piece, position):
