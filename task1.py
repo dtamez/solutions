@@ -16,58 +16,58 @@ from __future__ import absolute_import
 import argparse
 
 UP, RIGHT, LEFT, DOWN, UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, UP_LEFT = range(8)
-ROWS = {n: l for n, l in zip(range(8), list('abcdefgh'))}
+COLS = {n: l for n, l in zip(range(8), list('abcdefgh'))}
 
 
 class NoMoveError(Exception):
     pass
 
 
-def make_move(row, col, direction):
+def make_move(col, row, direction):
     if direction == UP:
-        return move_up(row,  col)
+        return move_up(col, row)
     elif direction == DOWN:
-        return move_down(row,  col)
+        return move_down(col, row)
     elif direction == LEFT:
-        return move_left(row,  col)
+        return move_left(col, row)
     elif direction == RIGHT:
-        return move_right(row,  col)
+        return move_right(col, row)
     elif direction == UP_RIGHT:
-        return move_up(*move_right(row, col))
+        return move_up(*move_right(col, row))
     elif direction == DOWN_RIGHT:
-        return move_down(*move_right(row, col))
+        return move_down(*move_right(col, row))
     elif direction == DOWN_LEFT:
-        return move_down(*move_left(row, col))
+        return move_down(*move_left(col, row))
     elif direction == UP_LEFT:
-        return move_up(*move_left(row, col))
+        return move_up(*move_left(col, row))
 
 
-def move_up(row, col):
+def move_up(col, row):
     if row == 7:
         raise NoMoveError()
     else:
-        return row + 1, col
+        return col, row + 1
 
 
-def move_down(row, col):
+def move_down(col, row):
     if row == 0:
         raise NoMoveError()
     else:
-        return row - 1, col
+        return col, row - 1
 
 
-def move_left(row, col):
+def move_left(col, row):
     if col == 0:
         raise NoMoveError()
     else:
-        return row, col - 1
+        return col - 1, row
 
 
-def move_right(row, col):
+def move_right(col, row):
     if col == 7:
         raise NoMoveError()
     else:
-        return row, col + 1
+        return col + 1, row
 
 
 def get_available_moves(piece, position):
