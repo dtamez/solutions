@@ -217,3 +217,17 @@ class TestTask1(unittest.TestCase):
                     'c6', 'b7', 'a8', 'f3', 'g2', 'h1']
 
         self.assertItemsEqual(moves, expected)
+
+    def test_get_king_moves_a1(self):
+        moves = task1.get_available_moves(task1.KING, 'a1')
+
+        expected = ['a2', 'b2', 'b1']
+
+        self.assertItemsEqual(moves, expected)
+
+    def test_get_king_moves_e4(self):
+        moves = task1.get_available_moves(task1.KING, 'e4')
+
+        expected = ['d3', 'd4', 'd5', 'e5', 'f5', 'f4', 'f3', 'e3']
+
+        self.assertItemsEqual(moves, expected)
