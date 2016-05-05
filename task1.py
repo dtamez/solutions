@@ -125,6 +125,29 @@ def get_king_moves(col, row):
     return all_moves
 
 
+def do_knight_move(col, row, first_move, second_move):
+    try:
+        new_col, new_row = first_move(col, row)
+        new_col, new_row = first_move(new_col, new_row)
+        return second_move(new_col, new_row)
+    except NoMoveError:
+        return None
+
+
+def get_knight_moves(col, row):
+    moves = []
+    moves.append(do_knight_move(col, row, move_up, move_left))
+    moves.append(do_knight_move(col, row, move_up, move_right))
+    moves.append(do_knight_move(col, row, move_down, move_left))
+    moves.append(do_knight_move(col, row, move_down, move_right))
+    moves.append(do_knight_move(col, row, move_left, move_up))
+    moves.append(do_knight_move(col, row, move_left, move_down))
+    moves.append(do_knight_move(col, row, move_right, move_up))
+    moves.append(do_knight_move(col, row, move_right, move_down))
+
+    return [move for move in moves if move]
+
+
 def from_algebraic(position):
     col = COLS_REVERSE[position[0]]
     row = int(position[1]) - 1
@@ -148,6 +171,8 @@ def get_available_moves(piece, position):
         moves = get_queen_moves(col, row)
     elif piece == KING:
         moves = get_king_moves(col, row)
+    elif piece == KNIGHT:
+        moves = get_knight_moves(col, row)
 
     for idx, move in enumerate(moves):
         moves[idx] = to_algebraic(*move)
