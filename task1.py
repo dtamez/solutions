@@ -104,6 +104,14 @@ def get_rook_moves(col, row):
     return all_moves
 
 
+def get_bishop_moves(col, row):
+    all_moves = []
+    for direction in [UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT]:
+        moves = [move for move in Moves(col, row, direction)]
+        all_moves.extend(moves)
+    return all_moves
+
+
 def from_algebraic(position):
     col = COLS_REVERSE[position[0]]
     row = int(position[1]) - 1
@@ -121,6 +129,8 @@ def get_available_moves(piece, position):
         moves = get_pawn_moves(col, row)
     elif piece == ROOK:
         moves = get_rook_moves(col, row)
+    elif piece == BISHOP:
+        moves = get_bishop_moves(col, row)
 
     for idx, move in enumerate(moves):
         moves[idx] = to_algebraic(*move)
