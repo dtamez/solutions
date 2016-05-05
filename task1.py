@@ -28,6 +28,8 @@ def make_move(row, col, direction):
         return move_up(row,  col)
     elif direction == DOWN:
         return move_down(row,  col)
+    elif direction == LEFT:
+        return move_left(row,  col)
     else:
         pass
 
@@ -44,6 +46,13 @@ def move_down(row, col):
         raise NoMoveError()
     else:
         return row - 1, col
+
+
+def move_left(row, col):
+    if col == 0:
+        raise NoMoveError()
+    else:
+        return row, col - 1
 
 
 def get_available_moves(piece, position):
