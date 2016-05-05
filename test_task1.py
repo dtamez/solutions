@@ -209,7 +209,7 @@ class TestTask1(unittest.TestCase):
         self.assertItemsEqual(moves, expected)
 
     def test_get_queen_moves_e4(self):
-        moves = task1.get_available_moves(task1.QUEEN, 'a1')
+        moves = task1.get_available_moves(task1.QUEEN, 'e4')
 
         expected = ['e1', 'e2', 'e3', 'e5', 'e6', 'e7', 'e8',
                     'a4', 'b4', 'c4', 'd4', 'f4', 'g4', 'h4',

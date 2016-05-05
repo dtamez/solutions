@@ -112,6 +112,10 @@ def get_bishop_moves(col, row):
     return all_moves
 
 
+def get_queen_moves(col, row):
+    return get_rook_moves(col, row) + get_bishop_moves(col, row)
+
+
 def from_algebraic(position):
     col = COLS_REVERSE[position[0]]
     row = int(position[1]) - 1
@@ -131,6 +135,8 @@ def get_available_moves(piece, position):
         moves = get_rook_moves(col, row)
     elif piece == BISHOP:
         moves = get_bishop_moves(col, row)
+    elif piece == QUEEN:
+        moves = get_queen_moves(col, row)
 
     for idx, move in enumerate(moves):
         moves[idx] = to_algebraic(*move)
