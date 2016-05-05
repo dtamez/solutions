@@ -82,3 +82,20 @@ class TestTask1(unittest.TestCase):
 
         expected = task1.NoMoveError
         self.assertRaises(expected, task1.make_move, 6, 7, task1.UP_RIGHT)
+
+    def test_make_move_down_right_h1(self):
+
+        move = task1.make_move(7, 0, task1.DOWN_RIGHT)
+
+        expected = 6, 1
+        self.assertEqual(move, expected)
+
+    def test_move_down_right_a7(self):
+
+        expected = task1.NoMoveError
+        self.assertRaises(expected, task1.make_move, 0, 6, task1.DOWN_RIGHT)
+
+    def test_move_down_right_b8(self):
+
+        expected = task1.NoMoveError
+        self.assertRaises(expected, task1.make_move, 1, 7, task1.DOWN_RIGHT)
