@@ -140,9 +140,27 @@ class TestTask1(unittest.TestCase):
         expected = task1.NoMoveError
         self.assertRaises(expected, task1.make_move, A, SEVEN, task1.UP_LEFT)
 
+    def test_from_algebraic_a1(self):
+        col, row = task1.from_algebraic('a1')
+
+        expected = A, ONE
+        self.assertTupleEqual((col, row), expected)
+
+    def test_to_algebraic_0_0(self):
+        position = task1.to_algebraic(0, 0)
+
+        expected = 'a1'
+        self.assertEqual(position, expected)
+
     def test_get_pawn_moves_a2(self):
 
-        move = task1.get_available_moves((task1.PAWN, 'a2'))
+        move = task1.get_available_moves(task1.PAWN, 'a2')
 
         expected = ['a3', 'a4']
         self.assertListEqual(move, expected)
+
+    def test_get_pawn_moves_a1(self):
+
+        expected = task1.IllegalPositionError
+        self.assertRaises(expected, task1.get_available_moves,
+                          task1.PAWN, 'a1')

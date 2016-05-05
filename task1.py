@@ -17,9 +17,20 @@ import argparse
 
 UP, RIGHT, LEFT, DOWN, UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, UP_LEFT = range(8)
 COLS = {n: l for n, l in zip(range(8), list('abcdefgh'))}
+COLS_REVERSE = {v: k for k, v in COLS.items()}
+PAWN = 'PAWN'
+ROOK = 'ROOK'
+KNIGHT = 'KNIGHT'
+BISHOP = 'BISHOP'
+QUEEN = 'QUEEN'
+KING = 'KING'
 
 
 class NoMoveError(Exception):
+    pass
+
+
+class IllegalPositionError(Exception):
     pass
 
 
@@ -70,8 +81,36 @@ def move_right(col, row):
         return col + 1, row
 
 
+def get_pawn_moves(col, row):
+    if row == 0:
+        msg = 'This is not a valid position for a pawn.'
+        raise IllegalPositionError(msg)
+    moves = []
+    moves.append(move_up(col, row))
+    if row == 1:
+        moves.append(move_up(*moves[-1]))
+    return moves
+
+
+def from_algebraic(position):
+    col = COLS_REVERSE[position[0]]
+    row = int(position[1]) - 1
+    return col, row
+
+
+def to_algebraic(col, row):
+    return '{}{}'.format(COLS[col], row + 1)
+
+
 def get_available_moves(piece, position):
-    pass
+    col, row = from_algebraic(position)
+    moves = []
+    if piece == PAWN:
+        moves = get_pawn_moves(col, row)
+
+    for idx, move in enumerate(moves):
+        moves[idx] = to_algebraic(*move)
+    return moves
 
 
 if __name__ == "__main__":
