@@ -15,7 +15,7 @@ from __future__ import absolute_import
 
 import argparse
 
-UP, RIGHT, LEFT, DOWN, UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, DOWN_RIGHT = range(8)
+UP, RIGHT, LEFT, DOWN, UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, UP_LEFT = range(8)
 ROWS = {n: l for n, l in zip(range(8), list('abcdefgh'))}
 
 
@@ -38,8 +38,8 @@ def make_move(row, col, direction):
         return move_down(*move_right(row, col))
     elif direction == DOWN_LEFT:
         return move_down(*move_left(row, col))
-    else:
-        pass
+    elif direction == UP_LEFT:
+        return move_up(*move_left(row, col))
 
 
 def move_up(row, col):
