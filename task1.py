@@ -26,6 +26,8 @@ class NoMoveError(Exception):
 def make_move(row, col, direction):
     if direction == UP:
         return move_up(row,  col)
+    elif direction == DOWN:
+        return move_down(row,  col)
     else:
         pass
 
@@ -35,6 +37,13 @@ def move_up(row, col):
         raise NoMoveError()
     else:
         return row + 1, col
+
+
+def move_down(row, col):
+    if row == 0:
+        raise NoMoveError()
+    else:
+        return row - 1, col
 
 
 def get_available_moves(piece, position):
