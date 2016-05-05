@@ -191,3 +191,29 @@ class TestTask1(unittest.TestCase):
 
         expected = ['b2', 'c3', 'd4', 'e5', 'f6', 'g7', 'h8']
         self.assertItemsEqual(moves, expected)
+
+    def test_get_bishop_moves_e4(self):
+        moves = task1.get_available_moves(task1.BISHOP, 'e4')
+
+        expected = ['f5', 'g6', 'h7', 'd3', 'c2', 'b1', 'd5',
+                    'c6', 'b7', 'a8', 'f3', 'g2', 'h1']
+        self.assertItemsEqual(moves, expected)
+
+    def test_get_queen_moves_a1(self):
+        moves = task1.get_available_moves(task1.QUEEN, 'a1')
+
+        expected = ['a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8',
+                    'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1',
+                    'b2', 'c3', 'd4', 'e5', 'f6', 'g7', 'h8']
+
+        self.assertItemsEqual(moves, expected)
+
+    def test_get_queen_moves_e4(self):
+        moves = task1.get_available_moves(task1.QUEEN, 'a1')
+
+        expected = ['e1', 'e2', 'e3', 'e5', 'e6', 'e7', 'e8',
+                    'a4', 'b4', 'c4', 'd4', 'f4', 'g4', 'h4',
+                    'f5', 'g6', 'h7', 'd3', 'c2', 'b1', 'd5',
+                    'c6', 'b7', 'a8', 'f3', 'g2', 'h1']
+
+        self.assertItemsEqual(moves, expected)
