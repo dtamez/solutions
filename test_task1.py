@@ -154,13 +154,20 @@ class TestTask1(unittest.TestCase):
 
     def test_get_pawn_moves_a2(self):
 
-        move = task1.get_available_moves(task1.PAWN, 'a2')
+        moves = task1.get_available_moves(task1.PAWN, 'a2')
 
         expected = ['a3', 'a4']
-        self.assertListEqual(move, expected)
+        self.assertListEqual(moves, expected)
 
     def test_get_pawn_moves_a1(self):
 
         expected = task1.IllegalPositionError
         self.assertRaises(expected, task1.get_available_moves,
                           task1.PAWN, 'a1')
+
+    def test_get_pawn_moves_a8(self):
+
+        moves = task1.get_available_moves(task1.PAWN, 'a8')
+
+        expected = 'No moves are available.'
+        self.assertListEqual(moves, expected)
