@@ -86,10 +86,22 @@ def get_pawn_moves(col, row):
         msg = 'This is not a valid position for a pawn.'
         raise IllegalPositionError(msg)
     moves = []
-    moves.append(move_up(col, row))
+    try:
+        moves.append(move_up(col, row))
+    except NoMoveError:
+        return moves
+
     if row == 1:
         moves.append(move_up(*moves[-1]))
     return moves
+
+
+def get_rook_moves(col, row):
+    all_moves = []
+    for direction in [UP, RIGHT, DOWN, LEFT]:
+        moves = [move for move in Moves(col, row, direction)]
+        all_moves.extend(moves)
+    return all_moves
 
 
 def from_algebraic(position):
@@ -107,10 +119,32 @@ def get_available_moves(piece, position):
     moves = []
     if piece == PAWN:
         moves = get_pawn_moves(col, row)
+    elif piece == ROOK:
+        moves = get_rook_moves(col, row)
 
     for idx, move in enumerate(moves):
         moves[idx] = to_algebraic(*move)
-    return moves
+    return moves or 'No moves are available.'
+
+
+class Moves(object):
+
+    def __init__(self, col, row, direction):
+        self.col = col
+        self.row = row
+        self.direction = direction
+
+    def next(self):
+        try:
+            move = make_move(self.col, self.row, self.direction)
+            self.col, self.row = move
+        except NoMoveError:
+            raise StopIteration
+
+        return move
+
+    def __iter__(self):
+        return self
 
 
 if __name__ == "__main__":

@@ -170,4 +170,11 @@ class TestTask1(unittest.TestCase):
         moves = task1.get_available_moves(task1.PAWN, 'a8')
 
         expected = 'No moves are available.'
+        self.assertEqual(moves, expected)
+
+    def test_get_rook_moves(self):
+        moves = task1.get_available_moves(task1.ROOK, 'a1')
+
+        expected = ['a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8',
+                    'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1']
         self.assertListEqual(moves, expected)
