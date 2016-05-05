@@ -8,11 +8,18 @@
 
 """
 Algorithm for returning a list of moves (defined in algebraic notation) given
-a starting square and a piece type.
+a starting square and a piece type.  It is assumed that the piece is a white
+colored piece, so that for example, pawns would move from a2 to b2.
 """
 from __future__ import absolute_import
 
 import argparse
+
+
+letters = list('abcdefgh')
+nums = list(range(1, 9))
+cols = [['{}{}'.format(l, n) for n in nums] for l in letters]
+rows = [['{}{}'.format(l, n) for l in letters] for n in nums]
 
 
 def get_available_moves(piece, position):

@@ -13,15 +13,14 @@ from __future__ import absolute_import
 
 import unittest
 
-from task1 import get_available_moves
+import task1
 
 
 class TestTask1(unittest.TestCase):
 
-    def test_get_available_moves_rook_a1(self):
+    def test_make_move_up(self):
 
-        moves = get_available_moves('rook', 'a1')
+        move = task1.make_move('a1', task1.UP)
 
-        expected = ['a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8'
-                    'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1']
-        self.assertItemsEqual(moves, expected)
+        expected = 'b1'
+        self.assertEqual(move, expected, 'One square up from a1 should be b1')
