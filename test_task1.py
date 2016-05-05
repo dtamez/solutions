@@ -15,121 +15,127 @@ import unittest
 
 import task1
 
+# some constants to make the board positions easier to read
+A, B, C, D, E, F, G, H = range(8)
+ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT = range(8)
+
 
 class TestTask1(unittest.TestCase):
 
     def test_make_move_up_a1(self):
 
-        move = task1.make_move(0, 0, task1.UP)
+        move = task1.make_move(A, ONE, task1.UP)
 
-        expected = 1, 0
+        expected = B, ONE
         self.assertEqual(move, expected)
 
     def test_move_up_h1(self):
 
         expected = task1.NoMoveError
-        self.assertRaises(expected, task1.make_move, 7, 0, task1.UP)
+        self.assertRaises(expected, task1.make_move, H, ONE, task1.UP)
 
     def test_make_move_down_h1(self):
 
-        move = task1.make_move(7, 0, task1.DOWN)
+        move = task1.make_move(H, ONE, task1.DOWN)
 
-        expected = 6, 0
+        expected = G, ONE
         self.assertEqual(move, expected)
 
     def test_move_down_a1(self):
 
         expected = task1.NoMoveError
-        self.assertRaises(expected, task1.make_move, 0, 0, task1.DOWN)
+        self.assertRaises(expected, task1.make_move, A, ONE, task1.DOWN)
 
     def test_move_left_a8(self):
 
-        move = task1.make_move(0, 7, task1.LEFT)
+        move = task1.make_move(A, EIGHT, task1.LEFT)
 
-        expected = 0, 6
+        expected = A, SEVEN
         self.assertEqual(move, expected)
 
     def test_move_left_a1(self):
 
         expected = task1.NoMoveError
-        self.assertRaises(expected, task1.make_move, 0, 0, task1.LEFT)
+        self.assertRaises(expected, task1.make_move, A, ONE, task1.LEFT)
 
     def test_move_right_a8(self):
 
         expected = task1.NoMoveError
-        self.assertRaises(expected, task1.make_move, 0, 7, task1.RIGHT)
+        self.assertRaises(expected, task1.make_move, A, EIGHT, task1.RIGHT)
 
     def test_move_right_a1(self):
 
-        move = task1.make_move(0, 0, task1.RIGHT)
+        move = task1.make_move(A, ONE, task1.RIGHT)
 
-        expected = 0, 1
+        expected = A, TWO
         self.assertEqual(move, expected)
 
     def test_make_move_up_right_a1(self):
 
-        move = task1.make_move(0, 0, task1.UP_RIGHT)
+        move = task1.make_move(A, ONE, task1.UP_RIGHT)
 
-        expected = 1, 1
+        expected = B, TWO
         self.assertEqual(move, expected)
 
     def test_move_up_right_h7(self):
 
         expected = task1.NoMoveError
-        self.assertRaises(expected, task1.make_move, 7, 6, task1.UP_RIGHT)
+        self.assertRaises(expected, task1.make_move, H, SEVEN, task1.UP_RIGHT)
 
     def test_move_up_right_g8(self):
 
         expected = task1.NoMoveError
-        self.assertRaises(expected, task1.make_move, 6, 7, task1.UP_RIGHT)
+        self.assertRaises(expected, task1.make_move, G, EIGHT, task1.UP_RIGHT)
 
     def test_make_move_down_right_h1(self):
 
-        move = task1.make_move(7, 0, task1.DOWN_RIGHT)
+        move = task1.make_move(H, ONE, task1.DOWN_RIGHT)
 
-        expected = 6, 1
+        expected = G, TWO
         self.assertEqual(move, expected)
 
     def test_move_down_right_a7(self):
 
         expected = task1.NoMoveError
-        self.assertRaises(expected, task1.make_move, 0, 6, task1.DOWN_RIGHT)
+        self.assertRaises(expected, task1.make_move, A, SEVEN,
+                          task1.DOWN_RIGHT)
 
     def test_move_down_right_b8(self):
 
         expected = task1.NoMoveError
-        self.assertRaises(expected, task1.make_move, 1, 7, task1.DOWN_RIGHT)
+        self.assertRaises(expected, task1.make_move, B, EIGHT,
+                          task1.DOWN_RIGHT)
 
     def test_make_move_down_left_h8(self):
 
-        move = task1.make_move(7, 7, task1.DOWN_LEFT)
+        move = task1.make_move(H, EIGHT, task1.DOWN_LEFT)
 
-        expected = 6, 6
+        expected = G, SEVEN
         self.assertEqual(move, expected)
 
     def test_move_down_left_b1(self):
 
         expected = task1.NoMoveError
-        self.assertRaises(expected, task1.make_move, 1, 0, task1.DOWN_LEFT)
+        self.assertRaises(expected, task1.make_move, B, ONE, task1.DOWN_LEFT)
 
     def test_move_down_left_a2(self):
 
         expected = task1.NoMoveError
-        self.assertRaises(expected, task1.make_move, 0, 1, task1.DOWN_LEFT)
+        self.assertRaises(expected, task1.make_move, A, TWO, task1.DOWN_LEFT)
 
     def test_make_move_up_left_a8(self):
 
-        move = task1.make_move(0, 7, task1.UP_LEFT)
+        move = task1.make_move(A, EIGHT, task1.UP_LEFT)
 
-        expected = 1, 6
+        expected = B, SEVEN
         self.assertEqual(move, expected)
 
     def test_move_up_left_g1(self):
 
         expected = task1.NoMoveError
-        self.assertRaises(expected, task1.make_move, 6, 0, task1.UP_LEFT)
+        self.assertRaises(expected, task1.make_move, G, ONE, task1.UP_LEFT)
 
     def test_move_down_left_h2(self):
 
         expected = task1.NoMoveError
-        self.assertRaises(expected, task1.make_move, 7, 1, task1.UP_LEFT)
+        self.assertRaises(expected, task1.make_move, H, TWO, task1.UP_LEFT)
