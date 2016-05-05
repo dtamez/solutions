@@ -116,6 +116,15 @@ def get_queen_moves(col, row):
     return get_rook_moves(col, row) + get_bishop_moves(col, row)
 
 
+def get_king_moves(col, row):
+    all_moves = []
+    for direction in [UP, UP_RIGHT, RIGHT, DOWN_RIGHT,
+                      DOWN, DOWN_LEFT, LEFT, UP_LEFT]:
+        moves = [move for move in Moves(col, row, direction, 1)]
+        all_moves.extend(moves)
+    return all_moves
+
+
 def from_algebraic(position):
     col = COLS_REVERSE[position[0]]
     row = int(position[1]) - 1
@@ -137,6 +146,8 @@ def get_available_moves(piece, position):
         moves = get_bishop_moves(col, row)
     elif piece == QUEEN:
         moves = get_queen_moves(col, row)
+    elif piece == KING:
+        moves = get_king_moves(col, row)
 
     for idx, move in enumerate(moves):
         moves[idx] = to_algebraic(*move)
@@ -145,15 +156,20 @@ def get_available_moves(piece, position):
 
 class Moves(object):
 
-    def __init__(self, col, row, direction):
+    def __init__(self, col, row, direction, limit=8):
         self.col = col
         self.row = row
         self.direction = direction
+        self.limit = limit
+        self.num_returned = 0
 
     def next(self):
+        if self.num_returned >= self.limit:
+            raise StopIteration
         try:
             move = make_move(self.col, self.row, self.direction)
             self.col, self.row = move
+            self.num_returned += 1
         except NoMoveError:
             raise StopIteration
 
@@ -170,4 +186,4 @@ if __name__ == "__main__":
     parser.add_argument('--position', help='starting point for piece',
                         type=str)
     args = parser.parse_args()
-    get_available_moves(args.piece, args.position)
+    print get_available_moves(args.piece, args.position)
