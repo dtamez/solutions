@@ -139,3 +139,10 @@ class TestTask1(unittest.TestCase):
 
         expected = task1.NoMoveError
         self.assertRaises(expected, task1.make_move, A, SEVEN, task1.UP_LEFT)
+
+    def test_get_pawn_moves_a2(self):
+
+        move = task1.get_available_moves((task1.PAWN, 'a2'))
+
+        expected = ['a3', 'a4']
+        self.assertListEqual(move, expected)
