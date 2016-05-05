@@ -178,3 +178,16 @@ class TestTask1(unittest.TestCase):
         expected = ['a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8',
                     'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1']
         self.assertListEqual(moves, expected)
+
+    def test_get_rook_moves_e4(self):
+        moves = task1.get_available_moves(task1.ROOK, 'e4')
+
+        expected = ['e1', 'e2', 'e3', 'e5', 'e6', 'e7', 'e8',
+                    'a4', 'b4', 'c4', 'd4', 'f4', 'g4', 'h4']
+        self.assertItemsEqual(moves, expected)
+
+    def test_get_bishop_moves_a1(self):
+        moves = task1.get_available_moves(task1.BISHOP, 'a1')
+
+        expected = ['b2', 'c3', 'd4', 'e5', 'f6', 'g7', 'h8']
+        self.assertItemsEqual(moves, expected)
