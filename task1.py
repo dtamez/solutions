@@ -32,6 +32,8 @@ def make_move(row, col, direction):
         return move_left(row,  col)
     elif direction == RIGHT:
         return move_right(row,  col)
+    elif direction == UP_RIGHT:
+        return move_up(*move_right(row, col))
     else:
         pass
 
