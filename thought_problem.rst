@@ -17,7 +17,7 @@ This topology will include the following components:
 
 Because the records needing to be processed vary in both schema and size a noSQL database will be used for persistence.
 
-In order to reduce the time needed to process the file, celery will be used to process the records in parallel.  Multiple celery servers can be used if more processing power is required.
+In order to reduce the time needed to process the file, celery will be used to process the records in parallel.  Multiple celery servers can be used if more processing power is required, just start them with the same broker url.zM 
 
 Celery requires a message queue and in this case rabbitmq or redis would be a good choice.
 
