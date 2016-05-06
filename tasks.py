@@ -88,21 +88,21 @@ class Board(object):
     # Primitives for moving one square in a given direction
     def make_move(self, col, row, direction):
         if direction == UP:
-            return move_up(col, row)
+            return self.move_up(col, row)
         elif direction == DOWN:
-            return move_down(col, row)
+            return self.move_down(col, row)
         elif direction == LEFT:
-            return move_left(col, row)
+            return self.move_left(col, row)
         elif direction == RIGHT:
-            return move_right(col, row)
+            return self.move_right(col, row)
         elif direction == UP_RIGHT:
-            return move_up(*move_right(col, row))
+            return self.move_up(*self.move_right(col, row))
         elif direction == DOWN_RIGHT:
-            return move_down(*move_right(col, row))
+            return self.move_down(*self.move_right(col, row))
         elif direction == DOWN_LEFT:
-            return move_down(*move_left(col, row))
+            return self.move_down(*self.move_left(col, row))
         elif direction == UP_LEFT:
-            return move_up(*move_left(col, row))
+            return self.move_up(*self.move_left(col, row))
 
     # moves for specific pieces
     def get_pawn_moves(self, col, row):
@@ -111,12 +111,12 @@ class Board(object):
             raise IllegalPositionError(msg)
         moves = []
         try:
-            moves.append(move_up(col, row))
+            moves.append(self.move_up(col, row))
         except NoMoveError:
             return moves
 
         if row == 1:
-            moves.append(move_up(*moves[-1]))
+            moves.append(self.move_up(*moves[-1]))
         return moves
 
     def get_rook_moves(self, col, row):
@@ -154,16 +154,48 @@ class Board(object):
 
     def get_knight_moves(self, col, row):
         moves = []
-        moves.append(self.do_knight_move(col, row, move_up, move_left))
-        moves.append(self.do_knight_move(col, row, move_up, move_right))
-        moves.append(self.do_knight_move(col, row, move_down, move_left))
-        moves.append(self.do_knight_move(col, row, move_down, move_right))
-        moves.append(self.do_knight_move(col, row, move_left, move_up))
-        moves.append(self.do_knight_move(col, row, move_left, move_down))
-        moves.append(self.do_knight_move(col, row, move_right, move_up))
-        moves.append(self.do_knight_move(col, row, move_right, move_down))
+        moves.append(self.do_knight_move(
+            col, row, self.move_up, self.move_left))
+        moves.append(self.do_knight_move(
+            col, row, self.move_up, self.move_right))
+        moves.append(self.do_knight_move(
+            col, row, self.move_down, self.move_left))
+        moves.append(self.do_knight_move(
+            col, row, self.move_down, self.move_right))
+        moves.append(self.do_knight_move(
+            col, row, self.move_left, self.move_up))
+        moves.append(self.do_knight_move(
+            col, row, self.move_left, self.move_down))
+        moves.append(self.do_knight_move(
+            col, row, self.move_right, self.move_up))
+        moves.append(self.do_knight_move(
+            col, row, self.move_right, self.move_down))
 
         return [move for move in moves if move]
+
+    def move_up(self, col, row):
+        if row == 7:
+            raise NoMoveError()
+        else:
+            return col, row + 1
+
+    def move_down(self, col, row):
+        if row == 0:
+            raise NoMoveError()
+        else:
+            return col, row - 1
+
+    def move_left(self, col, row):
+        if col == 0:
+            raise NoMoveError()
+        else:
+            return col - 1, row
+
+    def move_right(self, col, row):
+        if col == 7:
+            raise NoMoveError()
+        else:
+            return col + 1, row
 
     def __repr__(self):
         # print the board out for debug purposes
@@ -210,34 +242,6 @@ class Moves(object):
 
     def __iter__(self):
         return self
-
-
-def move_up(col, row):
-    if row == 7:
-        raise NoMoveError()
-    else:
-        return col, row + 1
-
-
-def move_down(col, row):
-    if row == 0:
-        raise NoMoveError()
-    else:
-        return col, row - 1
-
-
-def move_left(col, row):
-    if col == 0:
-        raise NoMoveError()
-    else:
-        return col - 1, row
-
-
-def move_right(col, row):
-    if col == 7:
-        raise NoMoveError()
-    else:
-        return col + 1, row
 
 
 # helper functions for switching back and forth
