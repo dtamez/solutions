@@ -231,6 +231,8 @@ class Moves(object):
     def next(self):
         if self.num_returned >= self.limit:
             raise StopIteration
+        if self.board.squares[self.col][self.row] == ENEMY:
+            raise StopIteration
         try:
             move = self.board.make_move(self.col, self.row, self.direction)
             self.col, self.row = move

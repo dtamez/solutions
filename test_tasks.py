@@ -303,7 +303,7 @@ class TestMovesWithEnemies(unittest.TestCase):
     def test_get_rook_moves_a1_enemy_at_a4(self):
         position = 'a1'
         board = tasks.Board(tasks.ROOK, position)
-        col, row = tasks.from_algebraic(position)
+        col, row = tasks.from_algebraic('a4')
         board.squares[col][row] = tasks.ENEMY
 
         moves = board.get_available_moves()
