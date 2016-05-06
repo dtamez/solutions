@@ -332,9 +332,10 @@ class TestMovesWithEnemies(unittest.TestCase):
         self.assertItemsEqual(moves, expected)
 
     def test_get_bishop_moves_e4_4_enemies(self):
-        board = self.get_custom_board(tasks.BISHOP, 'e4', 'd5', 'f')
+        board = self.get_custom_board(tasks.BISHOP,
+                                      'e4', 'd5', 'f5', 'f3', 'd3')
 
         moves = board.get_available_moves()
 
-        expected = ['b2', 'c3', 'd4']
+        expected = ['d5', 'f5', 'f3', 'd3']
         self.assertItemsEqual(moves, expected)
