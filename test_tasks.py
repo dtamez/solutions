@@ -257,8 +257,16 @@ class Testtasks(unittest.TestCase):
     def test_random_enemies(self):
         position = 'd3'
 
-        board = tasks.Board(tasks.ROOK, position)
+        board = tasks.Board(tasks.ROOK, position, True)
 
         expected = 8
+        actual = sum([row.count(tasks.ENEMY) for row in board.squares])
+        self.assertEqual(actual, expected)
+
+    def test_board_no_enemies(self):
+
+        board = tasks.Board(tasks.ROOK, 'd3')
+
+        expected = 0
         actual = sum([row.count(tasks.ENEMY) for row in board.squares])
         self.assertEqual(actual, expected)

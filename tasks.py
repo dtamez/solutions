@@ -66,23 +66,24 @@ def get_capture_moves(piece, position):
 
 class Board(object):
 
-    def __init__(self, piece, position):
+    def __init__(self, piece, position, place_enemies=False):
         self.piece = piece
         self.position = position
-        self.setup_pieces()
+        self.setup_pieces(place_enemies)
 
-    def setup_pieces(self):
+    def setup_pieces(self, place_enemies):
         col, row = from_algebraic(self.position)
 
         squares = [[EMPTY for _ in range(8)] for _ in range(8)]
         squares[col][row] = FRIENDLY
 
-        enemies = 8
-        while enemies:
-            x, y = randrange(8), randrange(8)
-            if not squares[x][y]:
-                squares[x][y] = ENEMY
-                enemies -= 1
+        if place_enemies:
+            enemies = 8
+            while enemies:
+                x, y = randrange(8), randrange(8)
+                if not squares[x][y]:
+                    squares[x][y] = ENEMY
+                    enemies -= 1
         self.squares = squares
 
     def __repr__(self):
