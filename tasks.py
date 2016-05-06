@@ -14,6 +14,7 @@ colored piece, so that for example, pawns would move from a2 to b2.
 from __future__ import absolute_import
 
 import argparse
+import math
 from random import randrange
 
 # Some constants to avoid typos, and make the code easier to read
@@ -48,13 +49,12 @@ class Board(object):
     def __init__(self, piece, position, place_enemies=False):
         self.piece = piece
         self.position = position
+        self.col, self.row = from_algebraic(self.position)
         self.setup_pieces(place_enemies)
 
     def setup_pieces(self, place_enemies):
-        col, row = from_algebraic(self.position)
-
         squares = [[EMPTY for _ in range(8)] for _ in range(8)]
-        squares[col][row] = FRIENDLY
+        squares[self.col][self.row] = FRIENDLY
 
         if place_enemies:
             enemies = 8
@@ -66,7 +66,7 @@ class Board(object):
         self.squares = squares
 
     def get_available_moves(self):
-        col, row = from_algebraic(self.position)
+        col, row = self.col, self.row
         moves = []
         if self.piece == PAWN:
             moves = self.get_pawn_moves(col, row)
@@ -205,6 +205,20 @@ class Board(object):
             raise NoMoveError()
         else:
             return col + 1, row
+
+    def get_farthest_target(self):
+        targets = [(c, r) for c in range(8) for r in range(8)
+                   if self.squares[c][r] == ENEMY]
+        farthest = None
+        farthest_target = None
+        x1, y1 = self.col, self.row
+        for x2, y2 in targets:
+            dist = math.sqrt((x2 - x1) + (y2 - y1))
+            if dist > farthest:
+                farthest = dist
+                farthest_target = x2, y2
+
+        return farthest_target
 
     def __repr__(self):
         # print the board out for debug purposes
