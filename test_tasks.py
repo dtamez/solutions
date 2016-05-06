@@ -153,54 +153,66 @@ class Testtasks(unittest.TestCase):
         self.assertEqual(position, expected)
 
     def test_get_pawn_moves_a2(self):
+        board = tasks.Board(tasks.PAWN, 'a2')
 
-        moves = tasks.get_available_moves(tasks.PAWN, 'a2')
+        moves = board.get_available_moves()
 
         expected = ['a3', 'a4']
         self.assertListEqual(moves, expected)
 
     def test_get_pawn_moves_a1(self):
+        board = tasks.Board(tasks.PAWN, 'a1')
 
         expected = tasks.IllegalPositionError
-        self.assertRaises(expected, tasks.get_available_moves,
-                          tasks.PAWN, 'a1')
+        self.assertRaises(expected, board.get_available_moves)
 
     def test_get_pawn_moves_a8(self):
+        board = tasks.Board(tasks.PAWN, 'a8')
 
-        moves = tasks.get_available_moves(tasks.PAWN, 'a8')
+        moves = board.get_available_moves()
 
         expected = 'No moves are available.'
         self.assertEqual(moves, expected)
 
     def test_get_rook_moves(self):
-        moves = tasks.get_available_moves(tasks.ROOK, 'a1')
+        board = tasks.Board(tasks.ROOK, 'a1')
+
+        moves = board.get_available_moves()
 
         expected = ['a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8',
                     'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1']
         self.assertListEqual(moves, expected)
 
     def test_get_rook_moves_e4(self):
-        moves = tasks.get_available_moves(tasks.ROOK, 'e4')
+        board = tasks.Board(tasks.ROOK, 'e4')
+
+        moves = board.get_available_moves()
 
         expected = ['e1', 'e2', 'e3', 'e5', 'e6', 'e7', 'e8',
                     'a4', 'b4', 'c4', 'd4', 'f4', 'g4', 'h4']
         self.assertItemsEqual(moves, expected)
 
     def test_get_bishop_moves_a1(self):
-        moves = tasks.get_available_moves(tasks.BISHOP, 'a1')
+        board = tasks.Board(tasks.BISHOP, 'a1')
+
+        moves = board.get_available_moves()
 
         expected = ['b2', 'c3', 'd4', 'e5', 'f6', 'g7', 'h8']
         self.assertItemsEqual(moves, expected)
 
     def test_get_bishop_moves_e4(self):
-        moves = tasks.get_available_moves(tasks.BISHOP, 'e4')
+        board = tasks.Board(tasks.BISHOP, 'e4')
+
+        moves = board.get_available_moves()
 
         expected = ['f5', 'g6', 'h7', 'd3', 'c2', 'b1', 'd5',
                     'c6', 'b7', 'a8', 'f3', 'g2', 'h1']
         self.assertItemsEqual(moves, expected)
 
     def test_get_queen_moves_a1(self):
-        moves = tasks.get_available_moves(tasks.QUEEN, 'a1')
+        board = tasks.Board(tasks.QUEEN, 'a1')
+
+        moves = board.get_available_moves()
 
         expected = ['a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8',
                     'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1',
@@ -209,7 +221,9 @@ class Testtasks(unittest.TestCase):
         self.assertItemsEqual(moves, expected)
 
     def test_get_queen_moves_e4(self):
-        moves = tasks.get_available_moves(tasks.QUEEN, 'e4')
+        board = tasks.Board(tasks.QUEEN, 'e4')
+
+        moves = board.get_available_moves()
 
         expected = ['e1', 'e2', 'e3', 'e5', 'e6', 'e7', 'e8',
                     'a4', 'b4', 'c4', 'd4', 'f4', 'g4', 'h4',
@@ -219,28 +233,36 @@ class Testtasks(unittest.TestCase):
         self.assertItemsEqual(moves, expected)
 
     def test_get_king_moves_a1(self):
-        moves = tasks.get_available_moves(tasks.KING, 'a1')
+        board = tasks.Board(tasks.KING, 'a1')
+
+        moves = board.get_available_moves()
 
         expected = ['a2', 'b2', 'b1']
 
         self.assertItemsEqual(moves, expected)
 
     def test_get_king_moves_e4(self):
-        moves = tasks.get_available_moves(tasks.KING, 'e4')
+        board = tasks.Board(tasks.KING, 'e4')
+
+        moves = board.get_available_moves()
 
         expected = ['d3', 'd4', 'd5', 'e5', 'f5', 'f4', 'f3', 'e3']
 
         self.assertItemsEqual(moves, expected)
 
     def test_get_knight_moves_a1(self):
-        moves = tasks.get_available_moves(tasks.KNIGHT, 'a1')
+        board = tasks.Board(tasks.KNIGHT, 'a1')
+
+        moves = board.get_available_moves()
 
         expected = ['b3', 'c2']
 
         self.assertItemsEqual(moves, expected)
 
     def test_get_knight_moves_e4(self):
-        moves = tasks.get_available_moves(tasks.KNIGHT, 'e4')
+        board = tasks.Board(tasks.KNIGHT, 'e4')
+
+        moves = board.get_available_moves()
 
         expected = ['d6', 'f6', 'g5', 'g3', 'f2', 'd2', 'c3', 'c5']
 

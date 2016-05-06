@@ -39,27 +39,6 @@ class IllegalPositionError(Exception):
     pass
 
 
-def get_available_moves(piece, position):
-    col, row = from_algebraic(position)
-    moves = []
-    if piece == PAWN:
-        moves = get_pawn_moves(col, row)
-    elif piece == ROOK:
-        moves = get_rook_moves(col, row)
-    elif piece == BISHOP:
-        moves = get_bishop_moves(col, row)
-    elif piece == QUEEN:
-        moves = get_queen_moves(col, row)
-    elif piece == KING:
-        moves = get_king_moves(col, row)
-    elif piece == KNIGHT:
-        moves = get_knight_moves(col, row)
-
-    for idx, move in enumerate(moves):
-        moves[idx] = to_algebraic(*move)
-    return moves or 'No moves are available.'
-
-
 def get_capture_moves(piece, position):
     pass
 
@@ -85,6 +64,26 @@ class Board(object):
                     squares[x][y] = ENEMY
                     enemies -= 1
         self.squares = squares
+
+    def get_available_moves(self):
+        col, row = from_algebraic(self.position)
+        moves = []
+        if self.piece == PAWN:
+            moves = get_pawn_moves(col, row)
+        elif self.piece == ROOK:
+            moves = get_rook_moves(col, row)
+        elif self.piece == BISHOP:
+            moves = get_bishop_moves(col, row)
+        elif self.piece == QUEEN:
+            moves = get_queen_moves(col, row)
+        elif self.piece == KING:
+            moves = get_king_moves(col, row)
+        elif self.piece == KNIGHT:
+            moves = get_knight_moves(col, row)
+
+        for idx, move in enumerate(moves):
+            moves[idx] = to_algebraic(*move)
+        return moves or 'No moves are available.'
 
     def __repr__(self):
         # print the board out for debug purposes
@@ -273,4 +272,5 @@ if __name__ == "__main__":
     if args.target:
         print get_capture_moves(args.piece, args.position)
     else:
-        print get_available_moves(args.piece, args.position)
+        board = Board(args.piece, args.position)
+        print board.get_available_moves()
