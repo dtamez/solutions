@@ -110,13 +110,22 @@ class Board(object):
             msg = 'This is not a valid position for a pawn.'
             raise IllegalPositionError(msg)
         moves = []
-        try:
-            moves.append(self.move_up(col, row))
-        except NoMoveError:
+        # since we move straight but capture diagonally need to peek
+        # at squares first
+        if row == 7:
             return moves
+        if col < 7:
+            if self.squares[col + 1][row + 1] == ENEMY:
+                moves.append(self.move_right(*self.move_up(col, row)))
+        if col > 0:
+            if self.squares[col - 1][row + 1] == ENEMY:
+                moves.append(self.move_left(*self.move_up(col, row)))
 
+        if self.squares[col][row + 1] == EMPTY:
+            moves.append(self.move_up(col, row))
         if row == 1:
-            moves.append(self.move_up(*moves[-1]))
+            if self.squares[col][row + 2] == EMPTY:
+                moves.append(self.move_up(*moves[-1]))
         return moves
 
     def get_rook_moves(self, col, row):

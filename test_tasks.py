@@ -339,3 +339,27 @@ class TestMovesWithEnemies(unittest.TestCase):
 
         expected = ['d5', 'f5', 'f3', 'd3']
         self.assertItemsEqual(moves, expected)
+
+    def test_get_queen_moves_a1_captures_only(self):
+        board = self.get_custom_board(tasks.QUEEN, 'a1', 'a2', 'b2', 'b1')
+
+        moves = board.get_available_moves()
+
+        expected = ['a2', 'b2', 'b1']
+        self.assertItemsEqual(moves, expected)
+
+    def test_knight_moves_a1_surrounded(self):
+        board = self.get_custom_board(tasks.KNIGHT, 'a1', 'a2', 'b2', 'b1')
+
+        moves = board.get_available_moves()
+
+        expected = ['b3', 'c2']
+        self.assertItemsEqual(moves, expected)
+
+    def test_pawn_moves_a2_enemies_a4_b3(self):
+        board = self.get_custom_board(tasks.PAWN, 'a2', 'a4', 'b3')
+
+        moves = board.get_available_moves()
+
+        expected = ['a3', 'b3']
+        self.assertItemsEqual(moves, expected)
