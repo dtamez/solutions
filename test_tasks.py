@@ -300,13 +300,41 @@ class TestMovesWithEnemies(unittest.TestCase):
         actual = sum([row.count(tasks.ENEMY) for row in board.squares])
         self.assertEqual(actual, expected)
 
+    def get_custom_board(self, piece, position, *enemies):
+        board = tasks.Board(piece, position)
+        for enemy in enemies:
+            col, row = tasks.from_algebraic(enemy)
+            board.squares[col][row] = tasks.ENEMY
+        return board
+
     def test_get_rook_moves_a1_enemy_at_a4(self):
-        position = 'a1'
-        board = tasks.Board(tasks.ROOK, position)
-        col, row = tasks.from_algebraic('a4')
-        board.squares[col][row] = tasks.ENEMY
+        board = self.get_custom_board(tasks.ROOK, 'a1', 'a4')
 
         moves = board.get_available_moves()
 
         expected = ['a2', 'a3', 'a4', 'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1']
+        self.assertItemsEqual(moves, expected)
+
+    def test_get_rook_moves_e4_4_enemies(self):
+        board = self.get_custom_board(tasks.ROOK, 'e4', 'c4', 'e6', 'g4', 'e2')
+
+        moves = board.get_available_moves()
+
+        expected = ['e5', 'e6', 'f4', 'g4', 'e3', 'e2', 'd4', 'c4']
+        self.assertItemsEqual(moves, expected)
+
+    def test_get_bishop_moves_a1_enemy_at_d4(self):
+        board = self.get_custom_board(tasks.BISHOP, 'a1', 'd4')
+
+        moves = board.get_available_moves()
+
+        expected = ['b2', 'c3', 'd4']
+        self.assertItemsEqual(moves, expected)
+
+    def test_get_bishop_moves_e4_4_enemies(self):
+        board = self.get_custom_board(tasks.BISHOP, 'e4', 'd5', 'f')
+
+        moves = board.get_available_moves()
+
+        expected = ['b2', 'c3', 'd4']
         self.assertItemsEqual(moves, expected)
