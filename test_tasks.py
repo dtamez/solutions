@@ -245,3 +245,6 @@ class Testtasks(unittest.TestCase):
         expected = ['d6', 'f6', 'g5', 'g3', 'f2', 'd2', 'c3', 'c5']
 
         self.assertItemsEqual(moves, expected)
+
+    def test_get_board(self):
+        board = tasks.Board(tasks.ROOK, 'd3')

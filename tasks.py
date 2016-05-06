@@ -14,6 +14,7 @@ colored piece, so that for example, pawns would move from a2 to b2.
 from __future__ import absolute_import
 
 import argparse
+from random import randrange
 
 # Some constants to avoid typos, and make the code easier to read
 # COLS and COLS_REVERSE are for switcing between indices and algebraic columns
@@ -26,6 +27,8 @@ KNIGHT = 'KNIGHT'
 BISHOP = 'BISHOP'
 QUEEN = 'QUEEN'
 KING = 'KING'
+
+EMPTY, FRIENDLY, ENEMY = range(3)
 
 
 class NoMoveError(Exception):
@@ -55,6 +58,10 @@ def get_available_moves(piece, position):
     for idx, move in enumerate(moves):
         moves[idx] = to_algebraic(*move)
     return moves or 'No moves are available.'
+
+
+def get_capture_moves(piece, position):
+    pass
 
 
 class Moves(object):
@@ -216,5 +223,11 @@ if __name__ == "__main__":
                         type=str)
     parser.add_argument('--position', help='starting point for piece',
                         type=str)
+    parser.add_argument('--target',
+                        help=('show minimum moves required to caputre '
+                              'farthest enemy piece'), type=str)
     args = parser.parse_args()
-    print get_available_moves(args.piece, args.position)
+    if args.target:
+        print get_capture_moves(args.piece, args.position)
+    else:
+        print get_available_moves(args.piece, args.position)
