@@ -66,24 +66,27 @@ class Board(object):
         self.squares = squares
 
     def get_available_moves(self):
-        col, row = self.col, self.row
-        moves = []
-        if self.piece == PAWN:
-            moves = self.get_pawn_moves(col, row)
-        elif self.piece == ROOK:
-            moves = self.get_rook_moves(col, row)
-        elif self.piece == BISHOP:
-            moves = self.get_bishop_moves(col, row)
-        elif self.piece == QUEEN:
-            moves = self.get_queen_moves(col, row)
-        elif self.piece == KING:
-            moves = self.get_king_moves(col, row)
-        elif self.piece == KNIGHT:
-            moves = self.get_knight_moves(col, row)
-
+        moves = self._get_available_moves(self.piece, self.col, self.row)
         for idx, move in enumerate(moves):
             moves[idx] = to_algebraic(*move)
         return moves or 'No moves are available.'
+
+    def _get_available_moves(self, piece, col, row):
+        moves = []
+        if piece == PAWN:
+            moves = self.get_pawn_moves(col, row)
+        elif piece == ROOK:
+            moves = self.get_rook_moves(col, row)
+        elif piece == BISHOP:
+            moves = self.get_bishop_moves(col, row)
+        elif piece == QUEEN:
+            moves = self.get_queen_moves(col, row)
+        elif piece == KING:
+            moves = self.get_king_moves(col, row)
+        elif piece == KNIGHT:
+            moves = self.get_knight_moves(col, row)
+
+        return moves
 
     # Primitives for moving one square in a given direction
     def make_move(self, col, row, direction):
@@ -222,6 +225,24 @@ class Board(object):
 
     def get_fewest_moves_to_farthest_target(self):
         target = self.get_farthest_target()
+        print target
+
+    def get_shortest_path(self, origin, target, path, visited):
+        print 'origin: {}, path: {}'.format(origin, path)
+        avail = self._get_available_moves(self.piece, *origin)
+        # is there a direct move available?
+        if target in avail:
+            path.append(target)
+            return path
+        elif avail:
+            for move in avail:
+                if move in visited:
+                    continue
+                visited.add(move)
+                path.append(move)
+                return self.get_shortest_path(move, target, path, visited)
+        else:
+            path.pop()
 
     def __repr__(self):
         # print the board out for debug purposes
@@ -239,7 +260,6 @@ class Board(object):
                     board.append('[x]')
                 else:
                     board.append('[ ]')
-                    #  print '[{},{}]'.format(c, r),
             board.append('\n')
         return ''.join(board)
 
