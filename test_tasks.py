@@ -248,8 +248,17 @@ class Testtasks(unittest.TestCase):
 
     def test_get_board(self):
         position = 'd3'
+        col, row = tasks.from_algebraic('d3')
 
         board = tasks.Board(tasks.ROOK, position)
 
-        col, row = tasks.from_algebraic('d3')
         self.assertEqual(board.squares[col][row], tasks.FRIENDLY)
+
+    def test_random_enemies(self):
+        position = 'd3'
+
+        board = tasks.Board(tasks.ROOK, position)
+
+        expected = 8
+        actual = sum([row.count(tasks.ENEMY) for row in board.squares])
+        self.assertEqual(actual, expected)
