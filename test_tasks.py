@@ -363,3 +363,12 @@ class TestMovesWithEnemies(unittest.TestCase):
 
         expected = ['a3', 'b3']
         self.assertItemsEqual(moves, expected)
+
+    def test_determine_farthest_enemy(self):
+        targets = ['b2', 'a5', 'b5', 'c5', 'c4', 'c3', 'd3', 'e3', 'e4']
+        board = self.get_custom_board(tasks.QUEEN, 'a1', *targets)
+
+        farthest = board.get_farthest_target
+
+        expected = tasks.from_algebraic('e4')
+        self.assertEqual(farthest, expected)
