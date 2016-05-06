@@ -247,4 +247,9 @@ class Testtasks(unittest.TestCase):
         self.assertItemsEqual(moves, expected)
 
     def test_get_board(self):
-        board = tasks.Board(tasks.ROOK, 'd3')
+        position = 'd3'
+
+        board = tasks.Board(tasks.ROOK, position)
+
+        col, row = tasks.from_algebraic('d3')
+        self.assertEqual(board.squares[col][row], tasks.FRIENDLY)
