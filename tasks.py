@@ -220,6 +220,9 @@ class Board(object):
 
         return farthest_target
 
+    def get_fewest_moves_to_farthest_target(self):
+        target = self.get_farthest_target()
+
     def __repr__(self):
         # print the board out for debug purposes
         # cols forward, rows backwards
