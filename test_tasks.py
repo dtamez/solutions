@@ -20,7 +20,7 @@ A, B, C, D, E, F, G, H = range(8)
 ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT = range(8)
 
 
-class TestMovesNoEnemies(unittest.TestCase):
+class TestMovesPrimitives(unittest.TestCase):
 
     def setUp(self):
         self.board = tasks.Board(tasks.KING, 'a1')
@@ -161,6 +161,8 @@ class TestMovesNoEnemies(unittest.TestCase):
         expected = 'a1'
         self.assertEqual(position, expected)
 
+
+class TestMovesNoEnemies(unittest.TestCase):
     def test_get_pawn_moves_a2(self):
         board = tasks.Board(tasks.PAWN, 'a2')
 
@@ -226,7 +228,6 @@ class TestMovesNoEnemies(unittest.TestCase):
         expected = ['a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8',
                     'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1',
                     'b2', 'c3', 'd4', 'e5', 'f6', 'g7', 'h8']
-
         self.assertItemsEqual(moves, expected)
 
     def test_get_queen_moves_e4(self):
@@ -238,7 +239,6 @@ class TestMovesNoEnemies(unittest.TestCase):
                     'a4', 'b4', 'c4', 'd4', 'f4', 'g4', 'h4',
                     'f5', 'g6', 'h7', 'd3', 'c2', 'b1', 'd5',
                     'c6', 'b7', 'a8', 'f3', 'g2', 'h1']
-
         self.assertItemsEqual(moves, expected)
 
     def test_get_king_moves_a1(self):
@@ -247,7 +247,6 @@ class TestMovesNoEnemies(unittest.TestCase):
         moves = board.get_available_moves()
 
         expected = ['a2', 'b2', 'b1']
-
         self.assertItemsEqual(moves, expected)
 
     def test_get_king_moves_e4(self):
@@ -256,7 +255,6 @@ class TestMovesNoEnemies(unittest.TestCase):
         moves = board.get_available_moves()
 
         expected = ['d3', 'd4', 'd5', 'e5', 'f5', 'f4', 'f3', 'e3']
-
         self.assertItemsEqual(moves, expected)
 
     def test_get_knight_moves_a1(self):
@@ -265,7 +263,6 @@ class TestMovesNoEnemies(unittest.TestCase):
         moves = board.get_available_moves()
 
         expected = ['b3', 'c2']
-
         self.assertItemsEqual(moves, expected)
 
     def test_get_knight_moves_e4(self):
@@ -274,7 +271,6 @@ class TestMovesNoEnemies(unittest.TestCase):
         moves = board.get_available_moves()
 
         expected = ['d6', 'f6', 'g5', 'g3', 'f2', 'd2', 'c3', 'c5']
-
         self.assertItemsEqual(moves, expected)
 
     def test_get_board(self):
@@ -289,9 +285,8 @@ class TestMovesNoEnemies(unittest.TestCase):
 class TestMovesWithEnemies(unittest.TestCase):
 
     def test_random_enemies(self):
-        position = 'd3'
 
-        board = tasks.Board(tasks.ROOK, position, True)
+        board = tasks.Board(tasks.ROOK, 'd3', True)
 
         expected = 8
         actual = sum([row.count(tasks.ENEMY) for row in board.squares])
@@ -304,3 +299,14 @@ class TestMovesWithEnemies(unittest.TestCase):
         expected = 0
         actual = sum([row.count(tasks.ENEMY) for row in board.squares])
         self.assertEqual(actual, expected)
+
+    def test_get_rook_moves_a1_enemy_at_a4(self):
+        position = 'a1'
+        board = tasks.Board(tasks.ROOK, position)
+        col, row = tasks.from_algebraic(position)
+        board.squares[col][row] = tasks.ENEMY
+
+        moves = board.get_available_moves()
+
+        expected = ['a2', 'a3', 'a4', 'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1']
+        self.assertItemsEqual(moves, expected)
