@@ -372,3 +372,13 @@ class TestMovesWithEnemies(unittest.TestCase):
 
         expected = tasks.from_algebraic('e4')
         self.assertEqual(farthest, expected)
+
+    def test_get_fewest_moves_to_target(self):
+        targets = ['b2', 'a5', 'b5', 'c5', 'c4', 'c3', 'd3', 'e3', 'e4']
+        board = self.get_custom_board(tasks.QUEEN, 'a1', *targets)
+        print board
+
+        moves = board.get_fewest_moves_to_farthest_target()
+
+        expected = ['a1 - h1', 'h1 - e4']
+        self.assertEqual(moves, expected)
