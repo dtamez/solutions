@@ -214,38 +214,39 @@ class Board(object):
         else:
             return col + 1, row
 
+    def get_bishop_targets(self, targets):
+        origin_color = (self.col - self.row) % 2
+        to_remove = []
+        for target in targets:
+            # same color?
+            target_color = (target[0] - target[1]) % 2
+            if target_color != origin_color:
+                to_remove.append(target)
+        for t in to_remove:
+            targets.remove(t)
+        return targets
+
+    def get_pawn_targets(self, targets):
+        enemies_this_col = [(self.col, r) for r in range(8)
+                            if self.squares[self.col][r] == ENEMY]
+        to_remove = []
+        for target in targets:
+            blocked = [e for e in enemies_this_col if e[1] < target[1]]
+            wrong_column = abs(target[0] - self.col) != 1
+            is_behind_pawn = target[1] <= self.row
+            if blocked or wrong_column or is_behind_pawn:
+                to_remove.append(target)
+        for t in to_remove:
+            targets.remove(t)
+        return targets
+
     def get_farthest_target(self):
         targets = [(c, r) for c in range(8) for r in range(8)
                    if self.squares[c][r] == ENEMY]
-        to_remove = []
         if self.piece == BISHOP:
-            origin_color = (self.col - self.row) % 2
-            # same color?
-            for target in targets:
-                target_color = (target[0] - target[1]) % 2
-                if target_color != origin_color:
-                    to_remove.append(target)
-            for target in to_remove:
-                targets.remove(target)
+            targets = self.get_bishop_targets(targets)
         elif self.piece == PAWN:
-            enemies_this_col = [(self.col, r) for r in range(8)
-                                if self.squares[self.col][r] == ENEMY]
-            for target in targets:
-                # not one column away?
-                if abs(target[0] - self.col) != 1:
-                    to_remove.append(target)
-                else:
-                    # or blocked?
-                    blocking = [e for e in enemies_this_col
-                                if e[1] < target[1]]
-                    if blocking:
-                        to_remove.append(target)
-                    # can't be behind the pawn either
-                    if target[1] <= self.row:
-                        to_remove.append(target)
-
-            for target in to_remove:
-                targets.remove(target)
+            targets = self.get_pawn_targets(targets)
 
         farthest = None
         farthest_target = None
