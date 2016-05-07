@@ -455,6 +455,19 @@ class TestMovesWithEnemies(unittest.TestCase):
         expected = [origin, d3, target]
         self.assertEqual(moves, expected)
 
+    def test_get_shortest_path_to_target_pawns(self):
+        targets = ['e4', 'f4', 'e5']
+        board = self.get_custom_board(tasks.PAWN, 'e2', *targets)
+        origin = tasks.from_algebraic('e2')
+        target = tasks.from_algebraic('e5')
+
+        moves = board.get_shortest_path(origin, target, [], dict())
+
+        e3 = tasks.from_algebraic('e3')
+        f4 = tasks.from_algebraic('f4')
+        expected = [origin, e3, f4, target]
+        self.assertEqual(moves, expected)
+
     def test_get_fewest_moves_to_target_bishop_wrong_color(self):
         targets = ['c6', 'g6', 'g2', 'c2', 'a7', 'a6']
         board = self.get_custom_board(tasks.BISHOP, 'e4', *targets)
@@ -467,6 +480,28 @@ class TestMovesWithEnemies(unittest.TestCase):
     def test_get_fewest_moves_to_target_bishop_no_target_works(self):
         targets = ['a7']
         board = self.get_custom_board(tasks.BISHOP, 'e4', *targets)
+
+        moves = board.get_fewest_moves_to_farthest_target()
+
+        new_targets = [(c, r) for c in range(8) for r in range(8)
+                       if board.squares[c][r] == tasks.ENEMY]
+        self.assertNotEqual(targets, new_targets)
+        self.assertIsNotNone(moves)
+
+    def test_get_fewest_moves_to_target_pawn_no_target_works(self):
+        targets = ['a7']
+        board = self.get_custom_board(tasks.PAWN, 'h2', *targets)
+
+        moves = board.get_fewest_moves_to_farthest_target()
+
+        new_targets = [(c, r) for c in range(8) for r in range(8)
+                       if board.squares[c][r] == tasks.ENEMY]
+        self.assertNotEqual(targets, new_targets)
+        self.assertIsNotNone(moves)
+
+    def test_get_fewest_moves_to_target_pawn_blocked(self):
+        targets = ['h4', 'g5']
+        board = self.get_custom_board(tasks.PAWN, 'h2', *targets)
 
         moves = board.get_fewest_moves_to_farthest_target()
 

@@ -217,17 +217,31 @@ class Board(object):
     def get_farthest_target(self):
         targets = [(c, r) for c in range(8) for r in range(8)
                    if self.squares[c][r] == ENEMY]
+        to_remove = []
         if self.piece == BISHOP:
             origin_color = (self.col - self.row) % 2
             # same color?
             for target in targets:
                 target_color = (target[0] - target[1]) % 2
                 if target_color != origin_color:
-                    targets.remove(target)
+                    to_remove.append(target)
+            for target in to_remove:
+                targets.remove(target)
         elif self.piece == PAWN:
-            # one column away?
-            if abs(target[0] - self.col) != 1:
-                targets.pop(target)
+            enemies_this_col = [(self.col, r) for r in range(8)
+                                if self.squares[self.col][r] == ENEMY]
+            for target in targets:
+                # not one column away?
+                if abs(target[0] - self.col) != 1:
+                    to_remove.append(target)
+                else:
+                    # or blocked?
+                    blocking = [e for e in enemies_this_col
+                                if e[1] < target[1]]
+                    if blocking:
+                        to_remove.append(target)
+            for target in to_remove:
+                targets.remove(target)
 
         farthest = None
         farthest_target = None
