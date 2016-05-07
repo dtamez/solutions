@@ -463,3 +463,12 @@ class TestMovesWithEnemies(unittest.TestCase):
 
         expected = ['e4', 'd3', 'a6']
         self.assertEqual(moves, expected)
+
+    def test_get_fewest_moves_to_target_bishop_no_target_works(self):
+        targets = ['a7']
+        board = self.get_custom_board(tasks.BISHOP, 'e4', *targets)
+
+        moves = board.get_fewest_moves_to_farthest_target()
+
+        expected = tasks.NO_PATH_TO_TARGET
+        self.assertEqual(moves, expected)
