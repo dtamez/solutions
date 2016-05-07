@@ -240,6 +240,10 @@ class Board(object):
                                 if e[1] < target[1]]
                     if blocking:
                         to_remove.append(target)
+                    # can't be behind the pawn either
+                    if target[1] <= self.row:
+                        to_remove.append(target)
+
             for target in to_remove:
                 targets.remove(target)
 
