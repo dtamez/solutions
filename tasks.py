@@ -213,11 +213,23 @@ class Board(object):
     def get_farthest_target(self):
         targets = [(c, r) for c in range(8) for r in range(8)
                    if self.squares[c][r] == ENEMY]
+        if self.piece == BISHOP:
+            origin_color = (self.col - self.row) % 2
+            # same color?
+            for target in targets:
+                target_color = (target[0] - target[1]) % 2
+                if target_color != origin_color:
+                    targets.remove(target)
+        elif self.piece == PAWN:
+            # one column away?
+            if abs(target[0] - self.col) != 1:
+                targets.pop(target)
+
         farthest = None
         farthest_target = None
         x1, y1 = self.col, self.row
         for x2, y2 in targets:
-            dist = math.sqrt((x2 - x1) + (y2 - y1))
+            dist = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
             if dist > farthest:
                 farthest = dist
                 farthest_target = x2, y2
@@ -225,8 +237,10 @@ class Board(object):
         return farthest_target
 
     def get_fewest_moves_to_farthest_target(self):
+        origin = self.col, self.row
         target = self.get_farthest_target()
-        print target
+        path = self.get_shortest_path(origin, target, [], {})
+        return [to_algebraic(*p) for p in path]
 
     def get_shortest_path(self, origin, target, path, seen):
         if len(self.best) - len(path) == 1:
