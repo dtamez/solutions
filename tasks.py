@@ -44,10 +44,6 @@ class IllegalPositionError(Exception):
     pass
 
 
-def get_capture_moves(piece, position):
-    pass
-
-
 class Board(object):
 
     def __init__(self, piece, position, place_enemies=False):
@@ -369,8 +365,8 @@ if __name__ == "__main__":
                         help=('show minimum moves required to caputre '
                               'farthest enemy piece'), type=str)
     args = parser.parse_args()
+    board = Board(args.piece, args.position)
     if args.target:
-        print get_capture_moves(args.piece, args.position)
+        print board.get_fewest_moves_to_farthest_target()
     else:
-        board = Board(args.piece, args.position)
         print board.get_available_moves()
