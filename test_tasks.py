@@ -382,7 +382,7 @@ class TestMovesWithEnemies(unittest.TestCase):
 
         self.assertEqual(path, [origin, target])
 
-    def test_get_shortest_move_finds_2_step_target(self):
+    def test_get_shortest_path_finds_2_step_target(self):
         board = self.get_custom_board(tasks.ROOK, 'a1', 'c2')
         origin = tasks.from_algebraic('a1')
         target = tasks.from_algebraic('c2')
@@ -405,7 +405,7 @@ class TestMovesWithEnemies(unittest.TestCase):
         expected = [origin, b1, b8, target]
         self.assertEqual(path, expected)
 
-    def test_get_fewest_moves_to_target_queen(self):
+    def test_get_shortest_path_to_target_queen(self):
         targets = ['b2', 'a5', 'b5', 'c5', 'c4', 'c3', 'd3', 'e3', 'e4']
         board = self.get_custom_board(tasks.QUEEN, 'a1', *targets)
         origin = tasks.from_algebraic('a1')
@@ -417,7 +417,7 @@ class TestMovesWithEnemies(unittest.TestCase):
         expected = [origin, h1, target]
         self.assertEqual(moves, expected)
 
-    def test_get_fewest_moves_to_target_king(self):
+    def test_get_shortest_path_to_target_king(self):
         targets = ['a3', 'b3', 'c3', 'c2', 'c1', 'd3']
         board = self.get_custom_board(tasks.KING, 'a1', *targets)
         origin = tasks.from_algebraic('a1')
@@ -428,4 +428,17 @@ class TestMovesWithEnemies(unittest.TestCase):
         b2 = tasks.from_algebraic('b2')
         c3 = tasks.from_algebraic('c3')
         expected = [origin, b2, c3, target]
+        self.assertEqual(moves, expected)
+
+    def test_get_shortest_to_target_knight(self):
+        targets = ['a5', 'b5', 'c5', 'd5', 'd4', 'd3', 'd2', 'd1']
+        board = self.get_custom_board(tasks.KNIGHT, 'a1', *targets)
+        origin = tasks.from_algebraic('a1')
+        target = tasks.from_algebraic('d5')
+
+        moves = board.get_shortest_path(origin, target, [], dict())
+
+        c2 = tasks.from_algebraic('c2')
+        e3 = tasks.from_algebraic('e3')
+        expected = [origin, c2, e3, target]
         self.assertEqual(moves, expected)
