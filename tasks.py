@@ -233,30 +233,25 @@ class Board(object):
             return
 
         path.append(origin)
-        print path
+        seen[origin] = len(path)
         avail = self._get_available_moves(self.piece, *origin)
         # is there a direct move available?
         if target in avail:
             # potential best solution
             path.append(target)
-            print path
             if len(path) < len(self.best):
                 self.best = path[:]
             path.pop()
             path.pop()
-            print path
         elif avail:
             if len(self.best) - len(path) == 1:
                 path.pop()
-                print path
                 return
             for move in avail:
-                if move in seen:
+                if move in seen and seen[move] < len(path):
                     continue
                 self.get_shortest_path(move, target, path, seen)
-            seen.add(origin)
             path.pop()
-            print path
         return self.best
 
     def __repr__(self):
