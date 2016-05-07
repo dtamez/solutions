@@ -454,3 +454,15 @@ class TestMovesWithEnemies(unittest.TestCase):
         d3 = tasks.from_algebraic('d3')
         expected = [origin, d3, target]
         self.assertEqual(moves, expected)
+
+    def test_get_shortest_path_to_target_bishop_wrong_color(self):
+        targets = ['c6', 'g6', 'g2', 'c2', 'a7', 'a6']
+        board = self.get_custom_board(tasks.BISHOP, 'e4', *targets)
+        origin = tasks.from_algebraic('e4')
+        target = tasks.from_algebraic('a7')
+
+        moves = board.get_shortest_path(origin, target, [], dict())
+
+        d3 = tasks.from_algebraic('d3')
+        expected = [origin, d3, target]
+        self.assertEqual(moves, expected)
