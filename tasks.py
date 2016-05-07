@@ -51,6 +51,7 @@ class Board(object):
         self.position = position
         self.col, self.row = from_algebraic(self.position)
         self.setup_pieces(place_enemies)
+        self.best = [0] * 100
 
     def setup_pieces(self, place_enemies):
         squares = [[EMPTY for _ in range(8)] for _ in range(8)]
@@ -227,22 +228,31 @@ class Board(object):
         target = self.get_farthest_target()
         print target
 
-    def get_shortest_path(self, origin, target, path, visited):
-        print 'origin: {}, path: {}'.format(origin, path)
+    def get_shortest_path(self, origin, target, path, seen):
+        if len(self.best) - len(path) == 1:
+            return
+
+        path.append(origin)
         avail = self._get_available_moves(self.piece, *origin)
         # is there a direct move available?
         if target in avail:
+            # potential best solution
             path.append(target)
-            return path
-        elif avail:
-            for move in avail:
-                if move in visited:
-                    continue
-                visited.add(move)
-                path.append(move)
-                return self.get_shortest_path(move, target, path, visited)
-        else:
+            if len(path) < len(self.best):
+                self.best = path[:]
             path.pop()
+            path.pop()
+        elif avail:
+            if len(self.best) - len(path) == 1:
+                path.pop()
+                return
+            for move in avail:
+                if move in seen:
+                    continue
+                self.get_shortest_path(move, target, path, seen)
+            seen.add(origin)
+            path.pop()
+        return self.best
 
     def __repr__(self):
         # print the board out for debug purposes
@@ -277,7 +287,12 @@ class Moves(object):
     def next(self):
         if self.num_returned >= self.limit:
             raise StopIteration
-        if self.board.squares[self.col][self.row] == ENEMY:
+        # if this space was captured stop iterating, however, if
+        # after the capture we are looking for moves anew
+        # (num_returned == 0) then don't stop the iteration as the
+        # enemy is not really there in this case
+        if (self.board.squares[self.col][self.row] == ENEMY and
+                self.num_returned > 0):
             raise StopIteration
         try:
             move = self.board.make_move(self.col, self.row, self.direction)

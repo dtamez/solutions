@@ -373,22 +373,21 @@ class TestMovesWithEnemies(unittest.TestCase):
         expected = tasks.from_algebraic('e4')
         self.assertEqual(farthest, expected)
 
-    def test_get_fewest_moves_to_target(self):
-        targets = ['b2', 'a5', 'b5', 'c5', 'c4', 'c3', 'd3', 'e3', 'e4']
-        board = self.get_custom_board(tasks.QUEEN, 'a1', *targets)
-        print board
+    #  def test_get_fewest_moves_to_target(self):
+        #  targets = ['b2', 'a5', 'b5', 'c5', 'c4', 'c3', 'd3', 'e3', 'e4']
+        #  board = self.get_custom_board(tasks.QUEEN, 'a1', *targets)
 
-        moves = board.get_fewest_moves_to_farthest_target()
+        #  moves = board.get_fewest_moves_to_farthest_target()
 
-        expected = ['a1 - h1', 'h1 - e4']
-        self.assertEqual(moves, expected)
+        #  expected = ['a1', 'h1', 'e4']
+        #  self.assertEqual(moves, expected)
 
     def test_get_shortest_move_finds_direct_target(self):
         board = self.get_custom_board(tasks.ROOK, 'a1', 'c1')
         origin = tasks.from_algebraic('a1')
         target = tasks.from_algebraic('c1')
 
-        path = board.get_shortest_path(origin, target, [origin], set())
+        path = board.get_shortest_path(origin, target, [], set())
 
         self.assertEqual(path, [origin, target])
 
@@ -397,7 +396,20 @@ class TestMovesWithEnemies(unittest.TestCase):
         origin = tasks.from_algebraic('a1')
         target = tasks.from_algebraic('c2')
 
-        path = board.get_shortest_path(origin, target, [origin], set())
+        path = board.get_shortest_path(origin, target, [], set())
 
         expected = [origin, tasks.from_algebraic('a2'), target]
+        self.assertEqual(path, expected)
+
+    def test_get_shortest_path_when_not_first_discovered(self):
+        targets = ['a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8']
+        board = self.get_custom_board(tasks.ROOK, 'a1', *targets)
+        origin = tasks.from_algebraic('a1')
+        target = tasks.from_algebraic('a8')
+
+        path = board.get_shortest_path(origin, target, [], set())
+
+        b1 = tasks.from_algebraic('b1')
+        b8 = tasks.from_algebraic('b8')
+        expected = [origin, b1, b8, target]
         self.assertEqual(path, expected)
