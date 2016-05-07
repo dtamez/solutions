@@ -470,5 +470,7 @@ class TestMovesWithEnemies(unittest.TestCase):
 
         moves = board.get_fewest_moves_to_farthest_target()
 
-        expected = tasks.NO_PATH_TO_TARGET
-        self.assertEqual(moves, expected)
+        new_targets = [(c, r) for c in range(8) for r in range(8)
+                       if board.squares[c][r] == tasks.ENEMY]
+        self.assertNotEqual(targets, new_targets)
+        self.assertIsNotNone(moves)

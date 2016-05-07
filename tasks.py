@@ -36,6 +36,10 @@ class NoMoveError(Exception):
     pass
 
 
+class NoPathToTargetError(Exception):
+    pass
+
+
 class IllegalPositionError(Exception):
     pass
 
@@ -239,6 +243,9 @@ class Board(object):
     def get_fewest_moves_to_farthest_target(self):
         origin = self.col, self.row
         target = self.get_farthest_target()
+        while not target:
+            self.setup_pieces(True)
+            target = self.get_farthest_target()
         path = self.get_shortest_path(origin, target, [], {})
         return [to_algebraic(*p) for p in path]
 
