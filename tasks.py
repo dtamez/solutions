@@ -364,9 +364,16 @@ if __name__ == "__main__":
     parser.add_argument('--target',
                         help=('show minimum moves required to caputre '
                               'farthest enemy piece'), type=str)
+    parser.add_argument('--collect',
+                        help=('show minimum moves required to caputre '
+                              'all enemy piece'), type=str)
     args = parser.parse_args()
+    if args.parse and args.target:
+        print 'Choose target or collect but not both.'
     board = Board(args.piece, args.position)
     if args.target:
         print board.get_fewest_moves_to_farthest_target()
+    elif args.collect:
+        print board.get_fewest_moves_to_all_targets()
     else:
         print board.get_available_moves()

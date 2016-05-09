@@ -509,3 +509,12 @@ class TestMovesWithEnemies(unittest.TestCase):
                        if board.squares[c][r] == tasks.ENEMY]
         self.assertNotEqual(targets, new_targets)
         self.assertIsNotNone(moves)
+
+    def test_get_fewest_moves_to_all_targets(self):
+        targets = ['a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8']
+        board = self.get_custom_board(tasks.ROOK, 'a1', *targets)
+
+        moves = board.get_fewest_moves_to_all_targets()
+
+        expected = ['a1', 'a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8']
+        self.assertEqual(moves, expected)
