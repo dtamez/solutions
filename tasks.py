@@ -15,6 +15,7 @@ from __future__ import absolute_import
 
 import argparse
 import math
+import sys
 from random import randrange
 
 # Some constants to avoid typos, and make the code easier to read
@@ -46,12 +47,17 @@ class IllegalPositionError(Exception):
 
 class Board(object):
 
-    def __init__(self, piece, position, place_enemies=False):
+    def __init__(self, piece, position, place_enemies=False, show=False):
         self.piece = piece
         self.position = position
         self.col, self.row = from_algebraic(self.position)
         self.setup_pieces(place_enemies)
+        self.targets = [(c, r) for c in range(8) for r in range(8)
+                        if self.squares[c][r] == ENEMY]
         self.best = [0] * 100
+        self.show = show
+        if show:
+            print self
 
     def setup_pieces(self, place_enemies):
         squares = [[EMPTY for _ in range(8)] for _ in range(8)]
@@ -255,19 +261,61 @@ class Board(object):
 
         return farthest_target
 
+    def get_fewest_moves_to_all_targets(self):
+        # approximate solution
+        steps = []
+        remaining = self.targets[:]
+        origin = (self.col, self.row)
+        while remaining:
+            self.best = [0] * 100
+            moves = self.get_nearest_target(origin, remaining)
+            steps.append(moves[1:])
+            origin = moves.pop()
+            # update our inner state
+            self.squares[self.col][self.row] = EMPTY
+            self.col, self.row = origin
+            self.squares[self.col][self.row] = FRIENDLY
+            if self.show:
+                print self
+            if remaining:
+                remaining.remove(origin)
+
+        total = sum([len(s) for s in steps]) - 1
+        if self.show:
+            print 'targets: {} '.format(
+                [to_algebraic(*t) for t in self.targets])
+            print '{} total steps to capture all targets'.format(total)
+        return [[to_algebraic(*s) for s in step] for step in steps]
+
+    def get_nearest_target(self, origin, targets):
+        nearest = None
+        for target in targets:
+            moves = self.get_shortest_path(origin, target, [], {})
+            if not moves:
+                # this target may return no moves if a previous target
+                # was a direct capture
+                continue
+            if not nearest or (moves and len(moves) < len(nearest)):
+                nearest = moves[:]
+        return nearest
+
     def get_fewest_moves_to_farthest_target(self):
         origin = self.col, self.row
         target = self.get_farthest_target()
+        # may need to set up the targets again
+        # if they are not valid for this piece
         while not target:
             self.setup_pieces(True)
             target = self.get_farthest_target()
         path = self.get_shortest_path(origin, target, [], {})
-        return [to_algebraic(*p) for p in path]
+
+        if self.show:
+            print '{} move{} from {} to {}'.format(
+                len(path) - 1, '' if len(path) == 2 else 's',
+                to_algebraic(*origin), to_algebraic(*target))
+        return [to_algebraic(*p) for p in path if p]
 
     def get_shortest_path(self, origin, target, path, seen):
-        if len(self.best) - len(path) == 1:
-            return
-
         path.append(origin)
         seen[origin] = len(path)
         avail = self._get_available_moves(self.piece, *origin)
@@ -280,6 +328,7 @@ class Board(object):
             path.pop()
             path.pop()
         elif avail:
+            # go one level deeper
             if len(self.best) - len(path) == 1:
                 path.pop()
                 return
@@ -363,14 +412,25 @@ if __name__ == "__main__":
                         type=str)
     parser.add_argument('--target',
                         help=('show minimum moves required to caputre '
-                              'farthest enemy piece'), type=str)
+                              'farthest enemy piece'), action='store_true')
     parser.add_argument('--collect',
                         help=('show minimum moves required to caputre '
-                              'all enemy piece'), type=str)
+                              'all enemy piece'), action='store_true')
+    parser.add_argument('--show_board',
+                        help=('show board positions' 'show_board'),
+                        action='store_true')
     args = parser.parse_args()
-    if args.parse and args.target:
+    enemies = args.collect or args.target
+    if args.collect and args.target:
         print 'Choose target or collect but not both.'
-    board = Board(args.piece, args.position)
+        sys.exit()
+    if args.collect:
+        if args.piece in [PAWN, BISHOP]:
+            print ("{}s can't cover all squares, so they're not allowed"
+                   " with the --collect option".format(args.piece))
+            sys.exit()
+    board = Board(args.piece, args.position, place_enemies=enemies,
+                  show=args.show_board)
     if args.target:
         print board.get_fewest_moves_to_farthest_target()
     elif args.collect:

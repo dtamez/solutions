@@ -378,7 +378,7 @@ class TestMovesWithEnemies(unittest.TestCase):
         origin = tasks.from_algebraic('a1')
         target = tasks.from_algebraic('c1')
 
-        path = board.get_shortest_path(origin, target, [], dict())
+        path = board.get_shortest_path(origin, target, [], {})
 
         self.assertEqual(path, [origin, target])
 
@@ -387,7 +387,7 @@ class TestMovesWithEnemies(unittest.TestCase):
         origin = tasks.from_algebraic('a1')
         target = tasks.from_algebraic('c2')
 
-        path = board.get_shortest_path(origin, target, [], dict())
+        path = board.get_shortest_path(origin, target, [], {})
 
         expected = [origin, tasks.from_algebraic('a2'), target]
         self.assertEqual(path, expected)
@@ -398,7 +398,7 @@ class TestMovesWithEnemies(unittest.TestCase):
         origin = tasks.from_algebraic('a1')
         target = tasks.from_algebraic('a8')
 
-        path = board.get_shortest_path(origin, target, [], dict())
+        path = board.get_shortest_path(origin, target, [], {})
 
         b1 = tasks.from_algebraic('b1')
         b8 = tasks.from_algebraic('b8')
@@ -411,7 +411,7 @@ class TestMovesWithEnemies(unittest.TestCase):
         origin = tasks.from_algebraic('a1')
         target = tasks.from_algebraic('e4')
 
-        moves = board.get_shortest_path(origin, target, [], dict())
+        moves = board.get_shortest_path(origin, target, [], {})
 
         h1 = tasks.from_algebraic('h1')
         expected = [origin, h1, target]
@@ -423,7 +423,7 @@ class TestMovesWithEnemies(unittest.TestCase):
         origin = tasks.from_algebraic('a1')
         target = tasks.from_algebraic('d3')
 
-        moves = board.get_shortest_path(origin, target, [], dict())
+        moves = board.get_shortest_path(origin, target, [], {})
 
         b2 = tasks.from_algebraic('b2')
         c3 = tasks.from_algebraic('c3')
@@ -436,7 +436,7 @@ class TestMovesWithEnemies(unittest.TestCase):
         origin = tasks.from_algebraic('a1')
         target = tasks.from_algebraic('d5')
 
-        moves = board.get_shortest_path(origin, target, [], dict())
+        moves = board.get_shortest_path(origin, target, [], {})
 
         c2 = tasks.from_algebraic('c2')
         b4 = tasks.from_algebraic('b4')
@@ -449,7 +449,7 @@ class TestMovesWithEnemies(unittest.TestCase):
         origin = tasks.from_algebraic('e4')
         target = tasks.from_algebraic('a6')
 
-        moves = board.get_shortest_path(origin, target, [], dict())
+        moves = board.get_shortest_path(origin, target, [], {})
 
         d3 = tasks.from_algebraic('d3')
         expected = [origin, d3, target]
@@ -461,7 +461,7 @@ class TestMovesWithEnemies(unittest.TestCase):
         origin = tasks.from_algebraic('e2')
         target = tasks.from_algebraic('e5')
 
-        moves = board.get_shortest_path(origin, target, [], dict())
+        moves = board.get_shortest_path(origin, target, [], {})
 
         e3 = tasks.from_algebraic('e3')
         f4 = tasks.from_algebraic('f4')
@@ -510,11 +510,94 @@ class TestMovesWithEnemies(unittest.TestCase):
         self.assertNotEqual(targets, new_targets)
         self.assertIsNotNone(moves)
 
-    def test_get_fewest_moves_to_all_targets(self):
-        targets = ['a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8']
-        board = self.get_custom_board(tasks.ROOK, 'a1', *targets)
+    def test_get_nearest_target_king(self):
+        targets = ['g4', 'h5']
+        board = self.get_custom_board(tasks.KING, 'h2', *targets)
+        origin = tasks.from_algebraic('h2')
+        targets = [tasks.from_algebraic(t) for t in targets]
+
+        moves = board.get_nearest_target(origin, targets)
+
+        h3 = tasks.from_algebraic('h3')
+        expected = [origin, h3, targets[0]]
+        self.assertEqual(moves, expected)
+
+    def test_get_nearest_target_knight(self):
+        targets = ['g1', 'f4']
+        board = self.get_custom_board(tasks.KNIGHT, 'h2', *targets)
+        origin = tasks.from_algebraic('h2')
+        targets = [tasks.from_algebraic(t) for t in targets]
+
+        moves = board.get_nearest_target(origin, targets)
+
+        f3 = tasks.from_algebraic('f3')
+        expected = [origin, f3, targets[0]]
+        self.assertEqual(moves, expected)
+
+    def test_get_nearest_target_rook(self):
+        targets = ['b4', 'c4', 'b3', 'c3']
+        board = self.get_custom_board(tasks.ROOK, 'h2', *targets)
+        origin = tasks.from_algebraic('h2')
+        targets = [tasks.from_algebraic(t) for t in targets]
+
+        moves = board.get_nearest_target(origin, targets)
+
+        not_expected = tasks.from_algebraic('b4')
+        self.assertNotIn(not_expected, moves)
+
+    def test_get_nearest_target_queen(self):
+        targets = ['b4', 'c4', 'b3', 'c3']
+        board = self.get_custom_board(tasks.QUEEN, 'h2', *targets)
+        origin = tasks.from_algebraic('h2')
+        targets = [tasks.from_algebraic(t) for t in targets]
+
+        moves = board.get_nearest_target(origin, targets)
+
+        self.assertEqual(3, len(moves))
+
+    def test_get_fewest_moves_to_all_targets_king_2_pieces(self):
+        targets = ['g4', 'h5']
+        board = self.get_custom_board(tasks.KING, 'h2', *targets)
+        board.targets = [tasks.from_algebraic(t) for t in targets]
 
         moves = board.get_fewest_moves_to_all_targets()
 
-        expected = ['a1', 'a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8']
+        expected = [
+            ['h3', 'g4'],
+            ['h5']]
+        self.assertEqual(moves, expected)
+
+    def test_get_fewest_moves_to_all_targets_king_8(self):
+        targets = ['g4', 'h5', 'a1', 'b2', 'b4', 'e6', 'h1', 'a8']
+        board = self.get_custom_board(tasks.KING, 'h2', *targets)
+        board.targets = [tasks.from_algebraic(t) for t in targets]
+
+        moves = board.get_fewest_moves_to_all_targets()
+        expected = [
+            ['h1'],
+            ['h2', 'h3', 'g4'],
+            ['h5'],
+            ['g4', 'f5', 'e6'],
+            ['d5', 'c4', 'b4'],
+            ['c3', 'b2'],
+            ['a1'],
+            ['a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8']]
+        self.assertEqual(moves, expected)
+
+    def test_get_fewest_moves_to_all_targets_queen(self):
+        targets = ['g4', 'h5', 'a1', 'b2', 'b4', 'e6', 'h1', 'a8']
+        board = self.get_custom_board(tasks.QUEEN, 'h2', *targets)
+        board.targets = [tasks.from_algebraic(t) for t in targets]
+
+        moves = board.get_fewest_moves_to_all_targets()
+
+        expected = [
+            ['h5'],
+            ['g4'],
+            ['b4'],
+            ['b2'],
+            ['a1'],
+            ['h1'],
+            ['a8'],
+            ['c8', 'e6']]
         self.assertEqual(moves, expected)
